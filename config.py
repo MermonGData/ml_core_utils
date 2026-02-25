@@ -13,9 +13,13 @@ def setup_notebook(seed: int = 42):
 def get_project_root():
     return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-def resolve_project_path(*paths):
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-    return os.path.join(project_root, *paths)
+def resolve_project_path(*paths, marker="data"):
+    current = os.path.abspath(os.getcwd())
+    while current != os.path.dirname(current):
+        if os.path.exists(os.path.join(current, marker)):
+            return os.path.join(current, *paths)
+        current = os.path.dirname(current)
+    return os.path.join(os.getcwd(), *paths)
 
 RESIDUAL_STYLE = {
     "scatter_color": "#4C72B0",
